@@ -1,0 +1,29 @@
+Laboratório Nacional de Computação Científica
+
+SDumont - https://sdumont.lncc.br/
+
+Plugin job_submit para controle de prioridade de tarefas quando
+a conta do usuário ultrapassa a cota estipulada de uso do cluster.
+
+Quando uma tarefa (job) é submetida, o plugin consulta do banco de
+dados de contabilidade do Slurm, agregando o produto do uso do nó
+pelo peso de cada nó da partição (em sdumont-particao-peso.conf).
+Também é recuperada a cota que a conta do projeto tem disponível
+por mês (em sdumont-conta-cota.conf). Se o uso ultrapassar a cota,
+então a partição para a qual foi submetida a tarefa será substituída
+por outra partição de menor prioridade (com o sufixo _low).
+
+Caso a) a conta não esteja sdumont-conta-cota.conf; ou b) a partição
+não esteja em sdumont-particao-peso.conf; ou c) não exista a particão
+com o sufixo _low; então a tarefa não será afetada pelo plugin.
+
+Exemplo de /etc/slurm/sdumont-particao-peso.conf:
+cpu,1.0
+nvidia,1.5
+phi,1.5
+mesca2,2.0
+
+Exemplo de /etc/slurm/sdumont-conta-cota.conf:
+proj1,1000000
+proj2,500000
+proj3,2500000
